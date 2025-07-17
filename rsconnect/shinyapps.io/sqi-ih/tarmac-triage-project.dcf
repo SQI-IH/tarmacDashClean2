@@ -1,0 +1,10 @@
+name: tarmac-triage-project
+title:
+username: sqi-ih
+account: sqi-ih
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15086228
+bundleId: 10628998
+url: https://sqi-ih.shinyapps.io/tarmac-triage-project/
+version: 1

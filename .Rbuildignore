@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^app\.R$
+^rsconnect$
+^\.rscignore$
+^\./\.secrets$

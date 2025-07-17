@@ -1,0 +1,21 @@
+Package: tarmacDashClean2
+Title: Tarmac Dashboard
+Version: 0.0.0
+Author: lboulet
+Description: Your Description Here
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dashboardthemes,
+    devtools,
+    dplyr,
+    golem,
+    lubridate,
+    pins,
+    pkgload,
+    shiny,
+    shinydashboard,
+    shinydashboardPlus,
+    shinyjs,
+    shinyWidgets
+RoxygenNote: 7.3.2

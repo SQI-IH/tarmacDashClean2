@@ -1,0 +1,16 @@
+.tarmac-desc-box {
+  background-color: #6185A2;
+  color: #EDEDED;
+  border-left: 5px solid #EDEDED;
+  border-radius: 8px;
+  padding: 15px;
+  width: 98%;
+  margin: 20px auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3em;
+  font-weight: 500;
+  line-height: 1.5;
+}

@@ -1,0 +1,9 @@
+.tarmac-icon {
+  max-width: 70px;   /* desktop */
+    height: auto;
+}
+
+/* phones */
+  @media (max-width: 767.98px) {
+    .tarmac-icon { max-width: 55px; }
+  }
