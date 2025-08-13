@@ -136,9 +136,17 @@ allEd <- function(site = "All Tarmac Sites") {
            Year = year(date))
 }
 
-profileLoad <- function(){
+profileLoad_raw <- function() {
   googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/19yf8Ty3si6XHjKRw6I6qyZ3CZl52ZY2q_7Q_dTJAR28/edit?gid=0#gid=0')
 }
+
+# cache to memory or disk (disk persists across calls in a process)
+cache <- cachem::cache_disk(dir = "shiny_cache")  # or cachem::cache_mem()
+profileLoad <- memoise::memoise(profileLoad_raw, cache = cache)
+
+# if you ever need to bust cache:
+# memoise::forget(profileLoad)
+
 
 filenameCreate <- function(dfProf, site, from.google = FALSE){
   z <- dfProf |>
