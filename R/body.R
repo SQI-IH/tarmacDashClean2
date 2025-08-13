@@ -10,6 +10,8 @@ body <- function() {
       ,mod_ed_statistics_ui("ed_statistics_ui_1")
       ,mod_event_analysis_ui("event_analysis_ui_1")
       # ,mod_data_upload_ui("data_upload_ui_1")
+      ,mod_arrival_forecast_ui("arrival_forecast_ui_1")
+      
       
     )
   )

@@ -77,7 +77,8 @@ summaryBarPlot <- function(dfT, color_palette = NULL) {
     c(
       "Castlegar"=  "#1f77b4", # blue
       "Sparwood" =  "#f5c647",
-      "Chase" = "#17becf"  # cyan
+      "Chase" = "#17becf",  # cyan
+      "Keremeos" = "#F15A25"  # cyan
     )
   
   x <- summary_data |> group_by(year_month) |> summarise(n = sum(count))

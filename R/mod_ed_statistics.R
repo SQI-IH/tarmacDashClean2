@@ -29,7 +29,15 @@ mod_ed_statistics_server <- function(id) {
     
     ed_data <- shiny::reactive({
       
-      edLoad(filenameCreate(profData(), input$site_select))
+      df <- edLoad(filenameCreate(profData(), input$site_select))
+      alt <- unique(df$ctas_level)[!unique(df$ctas_level) %in% as.character(1:5)]
+      ctas <- input$ctas_ed_visits
+      if(sum(input$ctas_ed_visits %in% 'alt')>0){
+        ctas <- c(ctas, alt)
+      }
+      df |>
+        filter(ctas_level %in% ctas)
+
     })
     
     output$weekly_arrivals_by_year <- shiny::renderTable({
@@ -95,7 +103,7 @@ ed_stats_ui <- function(ns) {
                         choices = c(1:5, "alt"),
                         selected = c(1:5, "alt"),
                         size = "xs",
-                        status = "warning"
+                        status = "primary"
                       )
         )
       )

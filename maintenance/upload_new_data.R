@@ -1,0 +1,10 @@
+source("R/fct_clean_ed_data.R")
+source("R/fct_write_site_csvs.R")
+source("R/fct_build_homepage_summary.R")
+source("R/mod_tarmac_fct_display.R")
+
+datapath <- file.choose()
+df <- readr::read_csv(datapath, show_col_types = FALSE)
+clean_df <- clean_ed_data(df)
+write_site_csvs(clean_df, output_dir = "app_data/ed")
+build_homepage_summary()

@@ -7,7 +7,7 @@ write_site_csvs <- function(df, output_dir = "app_data/ed", progress = NULL) {
   split(df, df$facility_name) %>%
     purrr::iwalk(function(site_df, facility_name) {
       outfile <- file.path(output_dir, paste0(facility_name, ".csv"))
-      
+      print(paste0('Processing ', facility_name, "."))
       site_df <- site_df %>% dplyr::mutate(across(everything(), as.character))
       
       if (file.exists(outfile)) {
