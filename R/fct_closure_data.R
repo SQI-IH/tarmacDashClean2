@@ -12,9 +12,20 @@ outageDataLoad <- function() {
     "https://docs.google.com/spreadsheets/d/1blKyewomhKKNxCJ_nnGt7MQFDH0RBnPKh4hrUKf-o_c/edit?gid=976485941"
   )
   
-  df |>
+  dfOutage <- 
+    df |>
     dplyr::filter(!is.na(submission_date)) |>
     dplyr::mutate(start_date = lubridate::ymd(start_date))
+  
+  dfPhsa <- readxl::read_excel('./app_data/outage/phsa_data.xlsx')
+  
+  dfPhsa <- 
+    dfPhsa |>
+    dplyr::mutate(start_date = lubridate::date(lubridate::ymd_hms(`Closure Start`)))
+  
+  dplyr::full_join(dfOutage, dfPhsa, by = c('hospital_name' = 'Diverting Hospital',
+                                                      'start_date' = 'start_date',
+                                                      'hospital_dept' = 'Department'))
 }
 
 #' Export filtered outage data to CSV
@@ -80,11 +91,21 @@ updateSideCtrls <- function(df, session, tag = "") {
   drtag <- paste0("outage_dates", tag)
   tptag <- paste0("outage_type", tag)
   
+  cts <- unique(df$hospital_city)
+  cts <- cts[!is.na(cts)]
+  
+  sel <- df |>
+    filter(hospital_dept == "Emergency",
+           diversion_type == "ED Full Diversion - ED fully closed",
+      start_date >= today() - months(6)) |>
+    pull(hospital_city) |>
+    unique() 
+  
   shinyWidgets::updateCheckboxGroupButtons(
     session = session,
     inputId = cktag,
-    choices = unique(df$hospital_city),
-    selected = unique(df$hospital_city),
+    choices = cts,
+    selected = sel,
     size = "xs"
   )
   

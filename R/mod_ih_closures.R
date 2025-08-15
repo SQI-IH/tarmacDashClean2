@@ -75,7 +75,9 @@ mod_ih_closures_server <- function(id) {
     
     data_filtered <- shiny::reactive({
       df <- data_all()
-      df <- df[df$hospital_city %in% input$cities, ]
+      if(!is.null(input$cities)){
+          df <- df[df$hospital_city %in% input$cities, ]
+      }
       if (!input$outage_type) {
         df <- df[df$diversion_type == "ED Full Diversion - ED fully closed", ]
       }
