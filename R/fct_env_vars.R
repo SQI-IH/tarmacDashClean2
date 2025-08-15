@@ -8,9 +8,9 @@
 
 included.cities <-
   c("100 Mile House", "Nakusp", "Castlegar","Chase","Clearwater", "Trail",
-    "Lillooet","Merritt", "Kamloops","Sparwood", "Oliver", "Keremeos")
+    "Lillooet","Merritt","Sparwood", "Oliver", "Keremeos")
 not.included <- c(
-  "Ashcroft", "Cranbrook", "Creston", "Fernie", "Golden", "Grand Forks",
+  "Ashcroft", "Cranbrook", "Kamloops", "Creston", "Fernie", "Golden", "Grand Forks",
   "Invermere", "Kelowna", "Nelson", "Penticton", "Princeton",
   "Revelstoke", "Salmon Arm", "Sparwood", "Vernon", "Williams Lake")
 

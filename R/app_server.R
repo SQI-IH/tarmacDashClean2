@@ -1,4 +1,6 @@
 app_server <- function(input, output, session) {
+  init_google_auth()  # <-- do this first
+  
   # 1) Always init the landing tab quickly
   mod_tarmac_server("tarmac_ui_1")
   

@@ -5,6 +5,6 @@ account: sqi-ih
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15201875
-bundleId: 10768675
+bundleId: 10768725
 url: https://sqi-ih.shinyapps.io/tarmac-triage-project-staged/
 version: 1
