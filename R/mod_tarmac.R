@@ -7,7 +7,18 @@
 
 mod_tarmac_ui <- function(id) {
   ns <- shiny::NS(id)
-  
+  tags$head(tags$style(HTML(sprintf("
+  /* Only affect this specific box */
+  #%s .box-header { position: relative; }
+  #%s .tarmac-box-tool {
+    position: absolute;
+    top: 6px;          /* tweak to taste */
+    right: 10px;       /* flush with right edge */
+    z-index: 2;
+  }
+  /* Optional: shrink button padding a touch */
+  #%s .tarmac-box-tool .btn { padding: 6px 8px; }
+", ns("tarmac_boxwrap"), ns("tarmac_boxwrap"), ns("tarmac_boxwrap")))))
   shinydashboard::tabItem(
     tabName = "tarmac",
     shiny::fluidRow(
@@ -15,11 +26,33 @@ mod_tarmac_ui <- function(id) {
     ),
     shiny::br(),
     shiny::fluidRow(
-      shinydashboard::box(
-        width = 8,
-        title = "Monthly Tarmac Events",
-        shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("tarmacBar"), height = "250px")
+      shiny::div(
+        id = ns("tarmac_boxwrap"),   # wrapper so we can target just this box
+        
+        shinydashboard::box(
+          width = 8,
+          title = tagList(
+            "Monthly Tarmac Events",
+            # This element will be positioned at the header's far right via CSS:
+            div(
+              class = "tarmac-box-tool",
+              shinyWidgets::dropdown(
+                width = "180px",
+                right = TRUE,
+                icon  = shiny::icon("chart-simple"),
+                selectInput(
+                  inputId = ns("chart_type"),
+                  label   = NULL,
+                  choices = c("Bar Chart" = "bar", "Control Chart" = "control"),
+                  selected = "bar",
+                  width = "160px"
+                )
+              )
+            )
+          ),
+          shinycssloaders::withSpinner(
+            plotly::plotlyOutput(ns("tarmacBar"), height = "250px")
+          )
         )
       ),
       shiny::uiOutput(ns("tarmac_box"))
@@ -112,7 +145,7 @@ mod_tarmac_server <- function(id) {
     })
     
     output$tarmacBar <- plotly::renderPlotly({
-      summaryBarPlot(tarmacData())
+      summaryBarPlot(tarmacData(), plot.type = input$chart_type)
     })
     
     output$tarmac_box <- tarmac_boxUI(ns)

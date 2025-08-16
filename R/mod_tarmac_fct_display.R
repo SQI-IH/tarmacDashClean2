@@ -37,7 +37,7 @@ tarmac_boxUI <- function(ns){
   
 }
 
-summaryBarPlot <- function(dfT, color_palette = NULL) {
+summaryBarPlot <- function(dfT, color_palette = NULL, plot.type = 'bar') {
   # Convert the date column to Date type
   data <- dfT %>%
     mutate(
@@ -83,7 +83,7 @@ summaryBarPlot <- function(dfT, color_palette = NULL) {
   
   x <- summary_data |> group_by(year_month) |> summarise(n = sum(count))
   # Plotly stacked bar chart with custom color palette
-  summary_data %>%
+  p <- summary_data %>%
     plotly::plot_ly(
       x = ~year_month,
       y = ~count,
@@ -113,7 +113,100 @@ summaryBarPlot <- function(dfT, color_palette = NULL) {
         tracegroupgap = 5 # Optional: Adjust spacing between groups in the legend
       )
     )
+
   
+  if(plot.type == 'control'){
+  # --- your data prep (unchanged) ---
+  df <- summary_data %>%
+    group_by(year_month) |>
+    summarise(count = sum(count)) |>
+    mutate(year_month = factor(year_month, levels = unique(year_month)))
+  
+  df_stats <- df %>%
+    mutate(
+      mean_count = mean(count),
+      sd_count = sd(count),
+      UCL = mean_count + 3 * sd_count,
+      LCL = pmax(mean_count - 3 * sd_count, 0)
+    )
+  
+  # --- colors ---
+  col_count <- "#1f77b4"  # blue
+  col_mean  <- "black"  # green
+  col_ucl   <- "#F15A25"  # red
+  col_lcl   <- "#F15A25"  # amber
+  
+  # --- build plot ---
+  p <- plotly::plot_ly(df_stats, x = ~year_month) %>%
+    # counts
+    plotly::add_trace(
+      y = ~count,
+      type = "scatter", mode = "lines+markers",
+      line = list(width = 2, color = col_count),
+      marker = list(size = 7),
+      hovertemplate = "Month: %{x}<br><b>Count</b>: %{y}<extra></extra>",
+      name = "Count", showlegend = FALSE
+    ) %>%
+    # mean
+    plotly::add_lines(
+      y = ~mean_count,
+      line = list(dash = "dash", width = 2, color = col_mean),
+      hovertemplate = "<b>Mean</b>: %{y:.2f}<extra></extra>",
+      name = "Mean", showlegend = FALSE
+    ) %>%
+    # UCL
+    plotly::add_lines(
+      y = ~UCL,
+      line = list(dash = "dot", width = 2, color = col_ucl),
+      hovertemplate = "<b>UCL</b>: %{y:.2f}<extra></extra>",
+      name = "UCL", showlegend = FALSE
+    ) %>%
+    # LCL
+    plotly::add_lines(
+      y = ~LCL,
+      line = list(dash = "dot", width = 2, color = col_lcl),
+      hovertemplate = "<b>LCL</b>: %{y:.2f}<extra></extra>",
+      name = "LCL", showlegend = FALSE
+    )
+  
+  # --- right-edge labels for mean/UCL/LCL ---
+  last_x <- tail(df_stats$year_month, 1)
+  last_vals <- df_stats %>% slice_tail(n = 1)
+  
+  p <- p %>%
+    plotly::add_annotations(
+      x = last_x, y = last_vals$mean_count,
+      text = paste0("Mean: ", round(last_vals$mean_count, 2)),
+      xanchor = "left", yanchor = "middle",
+      ax = 15, ay = 0, showarrow = TRUE,
+      arrowcolor = col_mean, font = list(color = col_mean)
+    ) %>%
+    plotly::add_annotations(
+      x = last_x, y = last_vals$UCL,
+      text = paste0("UCL: ", round(last_vals$UCL, 2)),
+      xanchor = "left", yanchor = "middle",
+      ax = 15, ay = 0, showarrow = TRUE,
+      arrowcolor = col_ucl, font = list(color = col_ucl)
+    ) %>%
+    plotly::add_annotations(
+      x = last_x, y = last_vals$LCL,
+      text = paste0("LCL: ", round(last_vals$LCL, 2)),
+      xanchor = "left", yanchor = "middle",
+      ax = 15, ay = 0, showarrow = TRUE,
+      arrowcolor = col_lcl, font = list(color = col_lcl)
+    )
+  
+  # --- layout & hover style ---
+  p <- plotly::layout(
+    p,
+    title = "Monthly Tarmac Events",
+    xaxis = list(title = "Month", tickangle = -30),
+    yaxis = list(title = "Count", rangemode = "tozero"),
+    hovermode = "x unified",
+    hoverlabel = list(bgcolor = "white", font = list(color = "black"))
+  )
+  }
+  return(p)
 }
 
 allEd <- function(site = "All Tarmac Sites") {
