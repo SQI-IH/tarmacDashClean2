@@ -6,3 +6,4 @@
 *.Rproj
 *.sqlite
 app_data/
+inst/models/*.rds
