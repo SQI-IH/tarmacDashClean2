@@ -7,3 +7,4 @@
 *.sqlite
 app_data/
 inst/models/*.rds
+inst/models/*.rds

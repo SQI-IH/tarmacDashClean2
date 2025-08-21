@@ -6,11 +6,11 @@ app_server <- function(input, output, session) {
   
   # 2) Track which heavy modules have been initialized
   loaded <- shiny::reactiveValues(
-    ih_closures      = FALSE,
-    project_docs     = FALSE,
-    ed_statistics    = FALSE,
-    event_analysis   = FALSE,
-    arrival_forecast = FALSE
+    ih_closures    = FALSE,
+    project_docs   = FALSE,
+    ed_statistics  = FALSE,
+    event_analysis = FALSE,
+    ai_forecast    = FALSE      # <-- add this
   )
   
   # 3) Helper to init a tab once
@@ -32,17 +32,20 @@ app_server <- function(input, output, session) {
              loaded$event_analysis <- TRUE
              mod_event_analysis_server("event_analysis_ui_1")
            },
-           "arrival_forecast" = if (!loaded$arrival_forecast) {
-             loaded$arrival_forecast <- TRUE
-             # keep legacy callModule if this one still uses it
-             callModule(mod_arrival_forecast_server, "arrival_forecast_ui_1")
+           "ai_forecast" = if (!loaded$ai_forecast) {
+             loaded$ai_forecast <- TRUE
+             mod_ai_forecast_server(
+               "ai_forecast_ui_1",
+               hourly_df    = hourly_df,
+               fitted_model = fitted_model,
+               xlev         = xlev
+             )
            }
+           
     )
   }
   
-  # 4) Lazy-load on tab change.
-  #    Use ignoreInit = FALSE so it fires once for the *current* tab too.
-  #    If the current tab is the landing "tarmac", init_tab() simply does nothing.
+  # 4) Lazy-load on tab change (also fires once for current tab)
   shiny::observeEvent(input$main_tabs, {
     shiny::req(input$main_tabs)
     init_tab(input$main_tabs)
