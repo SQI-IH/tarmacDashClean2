@@ -3,14 +3,15 @@
 #' @return A cleaned data frame of outage events
 #' @export
 outageDataLoad <- function() {
-  options(
-    gargle_oauth_email = TRUE,
-    gargle_oauth_cache = app_sys("app_data/.secrets")  # golem-style project path
-  )
-  
-  df <- googlesheets4::read_sheet(
-    "https://docs.google.com/spreadsheets/d/1blKyewomhKKNxCJ_nnGt7MQFDH0RBnPKh4hrUKf-o_c/edit?gid=976485941"
-  )
+  # options(
+  #   gargle_oauth_email = TRUE,
+  #   gargle_oauth_cache = app_sys("app_data/.secrets")  # golem-style project path
+  # )
+  # 
+  # df <- googlesheets4::read_sheet(
+  #   "https://docs.google.com/spreadsheets/d/1blKyewomhKKNxCJ_nnGt7MQFDH0RBnPKh4hrUKf-o_c/edit?gid=976485941"
+  # )
+  df <- readr::read_csv('app_data/outage/outage_summary_main.csv')
   
   dfOutage <- 
     df |>

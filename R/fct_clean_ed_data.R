@@ -16,5 +16,5 @@ clean_ed_data <- function(raw_df) {
   
   df %>%
     distinct(account_number_hash, .keep_all = TRUE) %>%
-    select(-account_number, -ed_arrival_date_time)
+    dplyr::select(-account_number, -ed_arrival_date_time)
 }

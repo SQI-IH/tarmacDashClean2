@@ -11,8 +11,7 @@ library(splines)   # optional if you want splines
 
 # R/ai_loader.R
 library(readr)
-library(dplyr)
-library(purrr)
+
 library(tools)
 
 read_all_sites <- function(dir_path) {
@@ -33,8 +32,6 @@ read_all_sites <- function(dir_path) {
 
 # Data prep & feature engineering -----------------------------------------
 # ---- Put in R/ai_forecast.R ----
-library(dplyr); library(tidyr); library(lubridate); library(stringr)
-library(purrr); library(slider); library(MASS)
 
 normalize_arrival_mode <- function(x) {
   x <- tolower(ifelse(is.na(x), "", x))
@@ -187,41 +184,43 @@ find_model_file <- function(fname) {
   NA_character_
 }
 
-
-model_path  <- find_model_file("ai_nb_model.rds")
-hourly_path <- find_model_file("hourly_df.rds")
-
-if (is.na(model_path) || is.na(hourly_path)) {
-  stop("Model files not found. Ensure inst/models/ai_nb_model.rds and hourly_df.rds are deployed.")
-}
-
-`%||%` <- function(x, y) if (is.null(x)) y else x
-
-loaded_obj <- readRDS(model_path)    # could be a bundle OR the model itself
-hourly_df  <- readRDS(hourly_path)
-
-if (is.list(loaded_obj) && !is.null(loaded_obj$model)) {
-  # bundle shape: list(model=..., xlev=..., meta=...)
-  fitted_model <- loaded_obj$model
-  xlev         <- loaded_obj$xlev %||% NULL
-} else {
-  # model saved directly (slim or full)
-  fitted_model <- loaded_obj
-  # try to get xlev from the object; if full glm.nb, derive from model frame
-  if (!is.null(loaded_obj$xlev)) {
-    xlev <- loaded_obj$xlev
-  } else if (inherits(loaded_obj, "negbin") && !is.null(loaded_obj$model)) {
-    xlev <- list(
-      site = levels(loaded_obj$model$site),
-      ctas = levels(loaded_obj$model$ctas)
-    )
-  } else {
-    xlev <- NULL
+load_forecast_model <- function(){
+  model_path  <- find_model_file("ai_nb_model.rds")
+  hourly_path <- find_model_file("hourly_df.rds")
+  
+  if (is.na(model_path) || is.na(hourly_path)) {
+    stop("Model files not found. Ensure inst/models/ai_nb_model.rds and hourly_df.rds are deployed.")
   }
+  
+  `%||%` <- function(x, y) if (is.null(x)) y else x
+  
+  loaded_obj <- readRDS(model_path)    # could be a bundle OR the model itself
+  hourly_df  <- readRDS(hourly_path)
+  
+  if (is.list(loaded_obj) && !is.null(loaded_obj$model)) {
+    # bundle shape: list(model=..., xlev=..., meta=...)
+    fitted_model <- loaded_obj$model
+    xlev         <- loaded_obj$xlev %||% NULL
+  } else {
+    # model saved directly (slim or full)
+    fitted_model <- loaded_obj
+    # try to get xlev from the object; if full glm.nb, derive from model frame
+    if (!is.null(loaded_obj$xlev)) {
+      xlev <- loaded_obj$xlev
+    } else if (inherits(loaded_obj, "negbin") && !is.null(loaded_obj$model)) {
+      xlev <- list(
+        site = levels(loaded_obj$model$site),
+        ctas = levels(loaded_obj$model$ctas)
+      )
+    } else {
+      xlev <- NULL
+    }
+  }
+  
+  # A little sanity print can help during development (optional)
+  message("Loaded model class: ", paste(class(fitted_model), collapse = "/"))
 }
 
-# A little sanity print can help during development (optional)
-message("Loaded model class: ", paste(class(fitted_model), collapse = "/"))
 
 
 # R/ai_forecast.R

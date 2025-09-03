@@ -1,9 +1,9 @@
-options(
-  # whenever there is one account token found, use the cached token
-  gargle_oauth_email = TRUE,
-  # specify auth tokens should be stored in a hidden directory ".secrets"
-  gargle_oauth_cache = "./app_data/.secrets"
-)
+# options(
+#   # whenever there is one account token found, use the cached token
+#   gargle_oauth_email = TRUE,
+#   # specify auth tokens should be stored in a hidden directory ".secrets"
+#   gargle_oauth_cache = "./app_data/.secrets"
+# )
 
 tarmacFilter <- function(df) {
   df %>%
@@ -230,7 +230,8 @@ allEd <- function(site = "All Tarmac Sites") {
 }
 
 profileLoad_raw <- function() {
-  googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/19yf8Ty3si6XHjKRw6I6qyZ3CZl52ZY2q_7Q_dTJAR28/edit?gid=0#gid=0')
+  # googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/19yf8Ty3si6XHjKRw6I6qyZ3CZl52ZY2q_7Q_dTJAR28/edit?gid=0#gid=0')
+  readr::read_csv('app_data/site_profiles.csv')
 }
 
 # cache to memory or disk (disk persists across calls in a process)

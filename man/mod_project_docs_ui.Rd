@@ -10,5 +10,5 @@ mod_project_docs_ui(id)
 \item{id}{Shiny module ID}
 }
 \description{
-UI for displaying downloadable Google Drive documents.
+UI for displaying downloadable local documents.
 }

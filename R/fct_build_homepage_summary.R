@@ -12,8 +12,8 @@ build_homepage_summary <- function(data_dir = "app_data/ed", output_path = "app_
     files <- list.files(data_dir, pattern = "\\.csv$", full.names = TRUE)
     # incProgress(0.1, detail = "Loading data")
     # Pull corrections from Google Sheet
-    # corrections <- read.csv('app_data/manual_discharge_corrections.csv')
-    corrections <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1Us6ZeItInP_UC72jxhrSc2ufwFYkpF7aTJ4Y6os2jdo/edit?gid=0#gid=0')
+    corrections <- readr::read_csv('app_data/manual_inclusions.csv')
+    # corrections <- googlesheets4::read_sheet('https://docs.google.com/spreadsheets/d/1Us6ZeItInP_UC72jxhrSc2ufwFYkpF7aTJ4Y6os2jdo/edit?gid=0#gid=0')
     
     # Apply corrections to your loaded ED data
     

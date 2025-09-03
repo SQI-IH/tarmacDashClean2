@@ -4,11 +4,14 @@
 \alias{mod_project_docs_server}
 \title{mod_project_docs_server}
 \usage{
-mod_project_docs_server(id)
+mod_project_docs_server(id, base_dir = "app_data/tarmac dashboard documents")
 }
 \arguments{
 \item{id}{Shiny module ID}
+
+\item{base_dir}{Character path to the root docs folder (default:
+"app_data/tarmac dashboard documents")}
 }
 \description{
-Server logic to manage document lists and downloads from Google Drive.
+Server logic to list and download local PDFs.
 }
